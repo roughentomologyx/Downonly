@@ -41,7 +41,7 @@ def mintNFT(firstUnsuccess):
     try:
         if dbFunctions.nextinc() != firstUnsuccess['obstacle']:
             print("break here")
-            raise Exception ("cannot mint, as mintid does not match")
+            #raise Exception ("cannot mint, as mintid does not match")
         logging.debug("mintNFT called with: %s", firstUnsuccess)
         contract_address = os.getenv("NFTCONTRACT_ADDRESS")
         owner_private_key = os.getenv("PRIVATE_KEY")
