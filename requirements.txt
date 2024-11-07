@@ -3,4 +3,5 @@ mysql-connector-python
 pycryptodome
 web3
 python-dotenv
+paramiko
 #RPi.GPIO

@@ -7,6 +7,30 @@ import re, os
 from dotenv import load_dotenv
 load_dotenv()
 table=os.getenv("TABLE")
+def nextinc():
+    cnx = connect_db()
+    if cnx is None:
+        print("Connection to database failed.")
+        return
+    try:
+        cursor = cnx.cursor()
+        # Check if bc_mintID matches the next auto_increment ID
+        cursor.execute(f"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'downonly' AND TABLE_NAME = '{table}'")
+        next_auto_inc = cursor.fetchone()[0]
+        print("nextinc:")
+        print(next_auto_inc)
+        if next_auto_inc is None:
+            next_auto_inc=1
+        return next_auto_inc
+    except mysql.connector.Error as err:
+        print(f"An error occurred: {err}")
+        raise Exception
+    finally:
+        if cursor:
+            cursor.close()
+        if cnx:
+            cnx.close()
+
 
 def write2Mints(Jobstate, Surface, Obstacle, Characte, mintPrice, buyerAdress, buytxHash, blockHeight, bc_mintID, fullname):
     cnx = connect_db()
@@ -30,11 +54,12 @@ def write2Mints(Jobstate, Surface, Obstacle, Characte, mintPrice, buyerAdress, b
 
         now = datetime.now()
         formatted_now = now.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
-
         add_mint = (f"INSERT INTO {table} "
-                    "(jobState, surface, obstacle, figure, ipfsVideo, openSea, ipfsSound, mintprice, fullname, buyerAddress, buytxHash, blockHeight)" 
-                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-        data_mint = (Jobstate, Surface, Obstacle, Characte, 'empty0', 'empty0', 'empty0', mintPrice, fullname, buyerAdress, buytxHash, blockHeight)
+                    "(jobState, surface, obstacle, figure, openSea, ipfsGIF, ipfsJPG, ipfsMP4, ipfsMP3, ipfsGLB, ipfsJSON, mintprice, fullname, buyerAddress, buytxHash, blockHeight, fallDistance) "
+                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+        data_mint = (
+        Jobstate, Surface, Obstacle, Characte, None, None, None, None, None, None, None, mintPrice, fullname,
+        buyerAdress, buytxHash, blockHeight, "10")
 
         print(data_mint)
         print("here")
@@ -42,6 +67,7 @@ def write2Mints(Jobstate, Surface, Obstacle, Characte, mintPrice, buyerAdress, b
         cnx.commit()
     except mysql.connector.Error as err:
         print(f"An error occurred: {err}")
+        raise Exception
     finally:
         if cursor:
             cursor.close()
@@ -200,7 +226,6 @@ def getLastSuccess(retry_attempts=3):
             if result:
                 return result
 
-
         except mysql.connector.Error as err:
                 print(f"An error occurred: {err}")
                 if attempt < retry_attempts - 1:
@@ -212,7 +237,6 @@ def getLastSuccess(retry_attempts=3):
         finally:
             if cnx:
                 cnx.close()
-
 
 
 def getFirstUnsuccess(retry_attempts=3):
