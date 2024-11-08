@@ -55,7 +55,7 @@ def write2Mints(Jobstate, Surface, Obstacle, Characte, mintPrice, buyerAdress, b
         now = datetime.now()
         formatted_now = now.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
         add_mint = (f"INSERT INTO {table} "
-                    "(jobState, surface, obstacle, figure, openSea, ipfsGIF, ipfsJPG, ipfsMP4, ipfsMP3, ipfsGLB, ipfsJSON, mintprice, fullname, buyerAddress, buytxHash, blockHeight, fallDistance) "
+                    "(jobState, surface, obstacle, figure, openSea, ipfsGIF, ipfsJPEG, ipfsMP4, ipfsMP3, ipfsGLB, ipfsJSON, mintprice, fullname, buyerAddress, buytxHash, blockHeight, fallDistance) "
                     "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
         data_mint = (
         Jobstate, Surface, Obstacle, Characte, None, None, None, None, None, None, None, mintPrice, fullname,
