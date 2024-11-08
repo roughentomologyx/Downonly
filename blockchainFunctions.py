@@ -7,6 +7,7 @@ from typing import Dict, Any
 from pathlib import Path
 import logging
 from helper import *
+import shutil
 
 CONTRACT_PATH = './contracts/dutchAuction.json'
 INFURA_URL = os.getenv('INFURA_URL')
@@ -134,7 +135,11 @@ def pinContentToIPFS(
     base_path = "./falldata/" + firstUnsuccess['fullname']
     extensions = ["json", "glb", "mp4","gif","jpeg","mp3"]
     responses = {}
+    mvsource = os.path.join("..", firstUnsuccess['fullname']+".json")
+    mvdestination = base_path = "./falldata/" + firstUnsuccess['fullname']+".json"
 
+    # Move and overwrite if the file exists
+    shutil.copy2(mvsource, mvdestination)
     for ext in extensions:
         file_path = Path(f"{base_path}.{ext}")
 
