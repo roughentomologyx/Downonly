@@ -72,7 +72,7 @@ def sendRequest2Renderer(surface, obstacle, figure, mintID, fullname):
         print(response.content)
 
         zip_dir = 'zips'
-        falldata_dir = 'falldata2'
+        falldata_dir = 'falldata'
         os.makedirs(zip_dir, exist_ok=True)
         os.makedirs(falldata_dir, exist_ok=True)
 
