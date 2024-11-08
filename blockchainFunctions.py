@@ -133,7 +133,7 @@ def pinContentToIPFS(
 
     endpoint_uri = "https://api.pinata.cloud/pinning/pinFileToIPFS"
     base_path = "./falldata/" + firstUnsuccess['fullname']
-    extensions = ["json", "glb", "mp4","gif","jpeg","mp3"]
+    extensions = ["glb", "mp4","gif","jpeg","mp3"]
     responses = {}
 
     for ext in extensions:
@@ -147,9 +147,7 @@ def pinContentToIPFS(
             raise Exception (f"The file '{file_path}' does not exist.")
 
         try:
-            if ext == "json":
-                file_path=Path(f"./{firstUnsuccess['fullname']}.{ext}")
-                print(file_path)
+
             with open(file_path, 'rb') as fp:
                 response = requests.post(
                     endpoint_uri, files={"file": (file_path.name, fp)}, headers=HEADERS
@@ -203,14 +201,7 @@ def pinContentToIPFS(
                     else:
                         print("IPFS hash not found in the response for the jpeg file.")
                         raise Exception
-                if ext == "json":
-                    ipfs_hash = response_data.get('IpfsHash')
-                    if ipfs_hash:
-                        ipfs_link = f"https://ipfs.io/ipfs/{ipfs_hash}"
-                        dbFunctions.update_column('ipfsJSON', ipfs_link, firstUnsuccess['id'])
-                    else:
-                        print("IPFS hash not found in the response for the json file.")
-                        raise Exception
+
         except requests.exceptions.RequestException as e:
             print(f"HTTP request failed for {file_path}: {e}")
             raise Exception (f"HTTP request failed for {file_path}: {e}")
@@ -219,6 +210,63 @@ def pinContentToIPFS(
 
             raise Exception (f"An error occurred with {file_path}: {e}")
 
+
+def uploadJsonToIPFS(
+        firstUnsuccess: Dict[str, Any], pinata_api_key: str, pinata_secret: str
+) -> Dict[str, Any]:
+    """
+    Uploads the JSON file to IPFS using Pinata API.
+
+    Args:
+        firstUnsuccess (Dict[str, Any]): Dictionary containing metadata including the file name.
+        pinata_api_key (str): Pinata API key for authentication.
+        pinata_secret (str): Pinata secret API key for authentication.
+
+    Returns:
+        Dict[str, Any]: Response data from the Pinata API after successfully uploading the JSON file.
+    """
+    HEADERS = {
+        "pinata_api_key": pinata_api_key,
+        "pinata_secret_api_key": pinata_secret,
+    }
+
+    # Define endpoint for Pinata IPFS API
+    endpoint_uri = "https://api.pinata.cloud/pinning/pinFileToIPFS"
+
+    # Construct the JSON file path
+    json_file_path = Path(f"./{firstUnsuccess['fullname']}.json")
+
+    # Check if the JSON file exists
+    if not json_file_path.exists():
+        raise FileNotFoundError(f"The JSON file '{json_file_path}' does not exist.")
+
+    # Upload the JSON file to IPFS
+    try:
+        with open(json_file_path, 'rb') as fp:
+            response = requests.post(
+                endpoint_uri, files={"file": (json_file_path.name, fp)}, headers=HEADERS
+            )
+            response.raise_for_status()
+            response_data = response.json()
+
+            # Print response data if available
+            if response_data:
+                print(response_data)
+            else:
+                raise Exception("Empty response from Pinata API.")
+
+            # Extract IPFS hash from response
+            ipfs_hash = response_data.get('IpfsHash')
+            if ipfs_hash:
+                ipfs_link = f"https://ipfs.io/ipfs/{ipfs_hash}"
+                dbFunctions.update_column('ipfsJSON', ipfs_link, firstUnsuccess['id'])
+            else:
+                raise KeyError("IPFS hash not found in the response for the JSON file.")
+
+    except requests.exceptions.RequestException as e:
+        raise Exception(f"HTTP request failed for {json_file_path}: {e}")
+    except Exception as e:
+        raise Exception(f"An error occurred with {json_file_path}: {e}")
 
 
 def mint(tokenURI, to_address, contract_address, owner_private_key, owner_address, provider_url):

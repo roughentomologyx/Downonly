@@ -61,9 +61,10 @@ def uploadFiles2IPFS(firstUnsuccess):
     # uploads the files to IPFS and returns the CID/IPFS Link on success
     try:
         logging.debug("uploadFiles2IPFS called with: %s", firstUnsuccess)
-        blockchainFunctions.create_ipfsjson(firstUnsuccess["fullname"], firstUnsuccess["figure"], firstUnsuccess["obstacle"], firstUnsuccess["surface"], firstUnsuccess["ipfsGIF"], firstUnsuccess["ipfsMP4"], firstUnsuccess["ipfsGLB"])
 
         blockchainFunctions.pinContentToIPFS(firstUnsuccess, os.getenv("PINATA_API_KEY"), os.getenv("PINATA_SECRET"))
+        blockchainFunctions.create_ipfsjson(firstUnsuccess["fullname"], firstUnsuccess["figure"], firstUnsuccess["obstacle"], firstUnsuccess["surface"], firstUnsuccess["ipfsGIF"], firstUnsuccess["ipfsMP4"], firstUnsuccess["ipfsGLB"])
+        blockchainFunctions.uploadJsonToIPFS(firstUnsuccess, os.getenv("PINATA_API_KEY"), os.getenv("PINATA_SECRET"))
         dbFunctions.update_column('jobState', 'uploaded2IPFS', firstUnsuccess['id'])
         mintNFT(firstUnsuccess)
     except Exception as e:
