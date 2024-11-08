@@ -147,7 +147,7 @@ def motorPush(cm):
         print(f"An error occurred: {e}")
 
 
-import os
+
 
 
 def sftp_backup_file(source_file, backup_host, backup_username, backup_password, backup_folder):
@@ -196,7 +196,7 @@ def getFallHeight(name):
         y_coordinate = str(data.get("startXYZ", {}).get("y"))
         return y_coordinate
     except Exception as e:
-        raise Exception e
+        raise Exception
 
 
 def transform_ipfs_link(url):
