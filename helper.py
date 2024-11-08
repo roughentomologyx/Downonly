@@ -184,16 +184,19 @@ def sftp_backup_file(source_file, backup_host, backup_username, backup_password,
 
 
 def getFallHeight(name):
-    file_path = f"falldata2/{name}.json"
-    if not os.path.exists(file_path):
-        print(f"File {file_path} not found.")
-        return None
+    try:
+        file_path = f"falldata/{name}.json"
+        if not os.path.exists(file_path):
+            print(f"File {file_path} not found.")
+            return None
 
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-    print("here")
-    y_coordinate = str(data.get("startXYZ", {}).get("y"))
-    return y_coordinate
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+        print("here")
+        y_coordinate = str(data.get("startXYZ", {}).get("y"))
+        return y_coordinate
+    except Exception as e:
+        raise Exception e
 
 
 def transform_ipfs_link(url):
