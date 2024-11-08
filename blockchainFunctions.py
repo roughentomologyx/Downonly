@@ -131,7 +131,7 @@ def pinContentToIPFS(
     }
 
     endpoint_uri = "https://api.pinata.cloud/pinning/pinFileToIPFS"
-    base_path = "./falldata/" + firstUnsuccess['fullname']
+    base_path = "./falldata2/" + firstUnsuccess['fullname']
     extensions = ["json", "glb", "mp4","gif","jpeg","mp3"]
     responses = {}
 

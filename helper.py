@@ -27,13 +27,13 @@ distance = os.getenv('NOMINT_DISTANCE')
 dbhost=os.getenv('DBHOST')
 backup_user=os.getenv('BACKUP_USER')
 backup_pass=os.getenv('BACKUP_PW')
-
+renderer_url= os.getenv('RENDERER_URL')
 
 def sendRequest2Renderer(surface, obstacle, figure, mintID, fullname):
-    renderer_url = 'http://127.0.0.1:5000/'
+    #renderer_url = 'http://127.0.0.1:5000/'
 
-    # Locate the appropriate JSON file from /falldata based on mintID - 1
-    falldata_dir = './falldata'
+    # Locate the appropriate JSON file from /falldata2 based on mintID - 1
+    falldata_dir = 'falldata2'
     previous_mint_id = int(mintID) - 1
     json_filename = None
 
@@ -72,7 +72,7 @@ def sendRequest2Renderer(surface, obstacle, figure, mintID, fullname):
         print(response.content)
 
         zip_dir = 'zips'
-        falldata_dir = './falldata'
+        falldata_dir = 'falldata2'
         os.makedirs(zip_dir, exist_ok=True)
         os.makedirs(falldata_dir, exist_ok=True)
 
@@ -82,7 +82,7 @@ def sendRequest2Renderer(surface, obstacle, figure, mintID, fullname):
         with open(zip_path, 'wb') as f:
             f.write(response.content)
 
-        # Extract all files to the falldata directory
+        # Extract all files to the falldata2 directory
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(falldata_dir)
 
@@ -95,7 +95,7 @@ def sendRequest2Renderer(surface, obstacle, figure, mintID, fullname):
             return True
         else:
 
-           raise Exception (f"Missing expected files in the falldata directory: {expected_files}")
+           raise Exception (f"Missing expected files in the falldata2 directory: {expected_files}")
 
     except requests.RequestException as e:
         print(f"Error: {e}")
@@ -182,7 +182,7 @@ def sftp_backup_file(source_file, backup_host, backup_username, backup_password,
 
 
 def getFallHeight(name):
-    file_path = f"./falldata/{name}.json"
+    file_path = f"falldata2/{name}.json"
     if not os.path.exists(file_path):
         print(f"File {file_path} not found.")
         return None
@@ -195,4 +195,4 @@ def getFallHeight(name):
 
 
 
-print(getFallHeight("../testdata/JsonTest3"))
+#print(getFallHeight("../testdata/JsonTest3"))
