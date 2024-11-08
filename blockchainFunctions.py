@@ -135,11 +135,7 @@ def pinContentToIPFS(
     base_path = "./falldata/" + firstUnsuccess['fullname']
     extensions = ["json", "glb", "mp4","gif","jpeg","mp3"]
     responses = {}
-    mvsource = os.path.join("..", firstUnsuccess['fullname']+".json")
-    mvdestination = base_path = "./falldata/" + firstUnsuccess['fullname']+".json"
 
-    # Move and overwrite if the file exists
-    shutil.copy2(mvsource, mvdestination)
     for ext in extensions:
         file_path = Path(f"{base_path}.{ext}")
 
@@ -151,6 +147,9 @@ def pinContentToIPFS(
             raise Exception (f"The file '{file_path}' does not exist.")
 
         try:
+            if ext == "json":
+                file_path=Path(f"./{firstUnsuccess['fullname']}.{ext}")
+                print(file_path)
             with open(file_path, 'rb') as fp:
                 response = requests.post(
                     endpoint_uri, files={"file": (file_path.name, fp)}, headers=HEADERS
