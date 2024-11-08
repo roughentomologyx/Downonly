@@ -33,7 +33,7 @@ def sendRequest2Renderer(surface, obstacle, figure, mintID, fullname):
     #renderer_url = 'http://127.0.0.1:5000/'
 
     # Locate the appropriate JSON file from /falldata2 based on mintID - 1
-    falldata_dir = 'falldata2'
+    falldata_dir = 'falldata'
     previous_mint_id = int(mintID) - 1
     json_filename = None
 
