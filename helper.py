@@ -27,10 +27,12 @@ distance = os.getenv('NOMINT_DISTANCE')
 dbhost=os.getenv('DBHOST')
 backup_user=os.getenv('BACKUP_USER')
 backup_pass=os.getenv('BACKUP_PW')
-renderer_url= os.getenv('RENDERER_URL')
+
 
 def sendRequest2Renderer(surface, obstacle, figure, mintID, fullname):
     #renderer_url = 'http://127.0.0.1:5000/'
+    renderer_url = os.getenv('RENDERER_URL')
+    print(renderer_url)
 
     # Locate the appropriate JSON file from /falldata2 based on mintID - 1
     falldata_dir = 'falldata'
@@ -194,5 +196,9 @@ def getFallHeight(name):
     return y_coordinate
 
 
-
+def transform_ipfs_link(url):
+    if url.startswith("https://ipfs.io/ipfs/"):
+        return url.replace("https://ipfs.io/ipfs/", "ipfs://")
+    else:
+        return "Invalid IPFS link format"
 #print(getFallHeight("../testdata/JsonTest3"))

@@ -227,13 +227,13 @@ def mint(tokenURI, to_address, contract_address, owner_private_key, owner_addres
 
     # Load contract ABI
     with open('./contracts/NFT.json', 'r') as abi_file:
-        contract_abi = json.load(abi_file)
+        contract_abi_nft = json.load(abi_file)
 
     # Create contract instance
-    contract = web3.eth.contract(address=contract_address, abi=contract_abi)
+    contract_nft = web3.eth.contract(address=contract_address, abi=contract_abi_nft)
 
     # Build the transaction
-    tx = contract.functions.mintNFT(to_address, tokenURI).build_transaction({
+    tx = contract_nft.functions.mintNFT(to_address, tokenURI).build_transaction({
         'from': owner_address,
         'nonce': web3.eth.get_transaction_count(owner_address),
         'gas': 300000,
