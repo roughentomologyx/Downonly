@@ -86,12 +86,12 @@ def create_ipfsjson(name, character, obstacle, surface, picIPFS, vidIPFS, glbIPF
     logging.debug("Creating IPFS JSON for: %s", name)
     try:
         picbaseIPFS = convert_ipfs_url(picIPFS)
-        glbbaseIPFS = convert_ipfs_url(glbIPFS)
+        vidbaseIPFS = convert_ipfs_url(vidIPFS)
         dictionary = {
-            "description": f"video: [{vidIPFS}]({vidIPFS})",
+            "description": f"3D-Modell: [{glbIPFS}]({glbIPFS})",
             "external_url": "https://nikitadiakur.com/",
             "image": picbaseIPFS,
-            "animation_url": glbbaseIPFS,
+            "animation_url": vidbaseIPFS,
             "name": name,
             "attributes": [
                 {"trait_type": "character", "value": character},
