@@ -13,7 +13,7 @@ import logging, time
 from blockchainFunctions import pinContentToIPFS
 
 load_dotenv()
-from helper import send_alert_email, motorPush, sftp_backup_file, sendRequest2Renderer, getFallHeight
+from helper import send_alert_email, motorPush, sftp_backup_file, sendRequest2Renderer, getFallHeight, transform_ipfs_link
 
 initialBlockHeight = 6311981
 logging.basicConfig(filename='app.log', level=logging.DEBUG,  # Changed to DEBUG to capture more details
@@ -47,7 +47,7 @@ def mintNFT(firstUnsuccess):
         owner_private_key = os.getenv("PRIVATE_KEY")
         owner_address = os.getenv("OWNER_ADDRESS")
         provider_url = os.getenv("INFURA_URL")
-        blockchainFunctions.mint(firstUnsuccess['ipfsJSON'], firstUnsuccess['buyerAddress'], contract_address, owner_private_key, owner_address, provider_url)
+        blockchainFunctions.mint(transform_ipfs_link(firstUnsuccess['ipfsJSON']), firstUnsuccess['buyerAddress'], contract_address, owner_private_key, owner_address, provider_url)
         backupfile = "./zips/" + firstUnsuccess['fullname'] + ".zip"
         #sftp_backup_file(backupfile, dbhost, backup_user, backup_pass, ".files")
         dbFunctions.update_column('jobState', 'done', firstUnsuccess['id'])
@@ -61,8 +61,9 @@ def uploadFiles2IPFS(firstUnsuccess):
     # uploads the files to IPFS and returns the CID/IPFS Link on success
     try:
         logging.debug("uploadFiles2IPFS called with: %s", firstUnsuccess)
-        blockchainFunctions.pinContentToIPFS(firstUnsuccess, os.getenv("PINATA_API_KEY"), os.getenv("PINATA_SECRET"))
         blockchainFunctions.create_ipfsjson(firstUnsuccess["fullname"], firstUnsuccess["figure"], firstUnsuccess["obstacle"], firstUnsuccess["surface"], firstUnsuccess["ipfsGIF"], firstUnsuccess["ipfsMP4"], firstUnsuccess["ipfsGLB"])
+
+        blockchainFunctions.pinContentToIPFS(firstUnsuccess, os.getenv("PINATA_API_KEY"), os.getenv("PINATA_SECRET"))
         dbFunctions.update_column('jobState', 'uploaded2IPFS', firstUnsuccess['id'])
         mintNFT(firstUnsuccess)
     except Exception as e:
@@ -148,6 +149,7 @@ def main():
                 )
             else:
                 logging.info("No new unsuccessful transactions found, retrying in 3 seconds")
+
             # find first NFT that is paid but not done
             logging.info("Keys and values in firstUnsuccess dictionary:")
             for key, value in firstUnsuccess.items():
@@ -163,6 +165,7 @@ def main():
                 except Exception as e:
                     logging.error("An error occurred while processing transactions: %s", e, exc_info=True)
                     raise Exception(e)
+
             else:
                 resumeJob(firstUnsuccess)
 
