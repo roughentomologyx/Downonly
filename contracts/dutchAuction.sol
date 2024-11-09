@@ -17,9 +17,9 @@ contract DutchAuction {
     bool public emergencyPaused = false;
     uint256 public epauseStartTime;
 
-    string[] public characters = ["bath", "clown", "knight", "ski"];
-    string[] public obstacles = ["shoppingcart", "chair", "money", "fence"];
-    string[] public surfaces =  ["construction", "hospital", "redBricks", "school"];
+    string[] public characters = ["business", "astronaut", "knight", "clown", "chef", "police", "ski", "construction", "farm", "bath", "judge"];
+    string[] public obstacles = ["shoppingcart", "balloons", "satellite", "toilet", "books", "horse", "snowCannon", "piano", "stove", "money", "transporter"];
+    string[] public surfaces =  ["antenna", "livingRoom", "windPark", "court", "castle", "ferris", "scaffolding", "cruise", "snowPark", "victoryColumn", "escalator"];
 
     mapping(string => uint8) public assetUsageCount;
 

@@ -13,7 +13,7 @@ import logging, time
 from blockchainFunctions import pinContentToIPFS
 
 load_dotenv()
-from helper import send_alert_email, motorPush, sftp_backup_file, sendRequest2Renderer, getFallHeight, transform_ipfs_link
+from helper import send_alert_email, motorPush, sftp_backup_file, sendRequest2Renderer, getFallHeight, transform_ipfs_link, push_motor_from_wei
 
 initialBlockHeight = 6311981
 logging.basicConfig(filename='app.log', level=logging.DEBUG,  # Changed to DEBUG to capture more details
@@ -51,7 +51,9 @@ def mintNFT(firstUnsuccess):
         backupfile = "./zips/" + firstUnsuccess['fullname'] + ".zip"
         #sftp_backup_file(backupfile, dbhost, backup_user, backup_pass, ".files")
         dbFunctions.update_column('jobState', 'done', firstUnsuccess['id'])
-        motorPush("10")
+        print("mintprice:")
+        print(firstUnsuccess['mintprice'])
+        push_motor_from_wei(firstUnsuccess['mintprice'])
         #lastSuccess['blockHeight']
     except Exception as e:
         logging.error("An error occurred in mintNFT: %s", e, exc_info=True)

@@ -119,21 +119,31 @@ def send_alert_email(msg):
     print(msg)
 
 
+def push_motor_from_wei(wei_amount):
+    # Convert Wei to Ether
+    ether_amount = wei_amount / 1e18
+    # Calculate centimeters from Ether (1 ETH = 1 m)
+    centimeters = ether_amount * 100
+    # Calculate seconds needed for the push (63 seconds per cm)
+    push_seconds = round(centimeters * 63)
+
+    # Execute the motor push
+    motorPush(push_seconds)
+
+    return push_seconds
 
 
 
 
-
-
-def motorPush(cm):
-    print("pushed motor by "+ cm + " cm")
+def motorPush(seconds):
+    print("pushed motor by "+ seconds + " seconds")
     try:
     # Read the current value from the file
         with open("./motorTimeRemaining.txt", 'r') as file:
             current_value = int(file.read().strip())
             print(current_value)
     # Add x seconds to the current value
-        updated_value = current_value + int(cm)
+        updated_value = current_value + int(seconds)
     # Write the updated value back to the file
         with open("./motorTimeRemaining.txt", 'w') as file:
             file.write(str(updated_value))
