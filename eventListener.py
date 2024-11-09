@@ -47,7 +47,7 @@ def mintNFT(firstUnsuccess):
         owner_private_key = os.getenv("PRIVATE_KEY")
         owner_address = os.getenv("OWNER_ADDRESS")
         provider_url = os.getenv("INFURA_URL")
-        blockchainFunctions.mint(transform_ipfs_link(firstUnsuccess['ipfsJSON']), firstUnsuccess['buyerAddress'], contract_address, owner_private_key, owner_address, provider_url)
+        blockchainFunctions.mint(transform_ipfs_link(firstUnsuccess['ipfsJSON']), firstUnsuccess['buyerAddress'], contract_address, owner_private_key, owner_address, provider_url, firstUnsuccess['mintID'])
         backupfile = "./zips/" + firstUnsuccess['fullname'] + ".zip"
         #sftp_backup_file(backupfile, dbhost, backup_user, backup_pass, ".files")
         dbFunctions.update_column('jobState', 'done', firstUnsuccess['id'])

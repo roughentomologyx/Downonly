@@ -184,7 +184,7 @@ def uploadJsonToIPFS(firstUnsuccess: Dict[str, Any], pinata_api_key: str, pinata
         raise
 
 
-def mint(tokenURI, to_address, contract_address, owner_private_key, owner_address, provider_url):
+def mint(tokenURI, to_address, contract_address, owner_private_key, owner_address, provider_url, mintID):
     logging.debug("Minting NFT with tokenURI: %s to address: %s", tokenURI, to_address)
     try:
         web3 = Web3(Web3.HTTPProvider(provider_url))
@@ -205,7 +205,8 @@ def mint(tokenURI, to_address, contract_address, owner_private_key, owner_addres
         signed_tx = web3.eth.account.sign_transaction(tx, private_key=owner_private_key)
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
-
+        #opensea here
+        dbFunctions.update_column("openSea", "https://testnets.opensea.io/assets/sepolia/" + str(tx_hash), mintID)
         logging.info("Transaction successful with hash: %s", web3.to_hex(tx_hash))
         return tx_receipt
     except Exception as e:
@@ -239,7 +240,7 @@ def increment_push_count():
         with open(PUSH_COUNT_FILE, 'w') as f:
             f.write('0')
     with open(PUSH_COUNT_FILE, 'r') as f:
-        count = int(f.read().strip())
+        count = float(f.read().strip())
     with open(PUSH_COUNT_FILE, 'w') as f:
         f.write(str(count + 1))
     logging.info("Push count incremented, new value: %d", count + 1)
