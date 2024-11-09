@@ -12,17 +12,20 @@ STATE_FILE = './motorTimeRemaining.txt'
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(GPIO_PIN, GPIO.OUT)
 
+
 # Load state
 def load_state():
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE, 'r') as f:
-            return int(f.read().strip())
-    return 0
+            return float(f.read().strip())  # Allow float values
+    return 0.0
+
 
 # Save state
 def save_state(time_remaining):
     with open(STATE_FILE, 'w') as f:
-        f.write(str(time_remaining))
+        f.write(f"{time_remaining:.2f}")  # Save with two decimal precision
+
 
 # Control motor
 def control_motor():
@@ -30,12 +33,13 @@ def control_motor():
         time_remaining = load_state()
         if time_remaining > 0:
             GPIO.output(GPIO_PIN, GPIO.HIGH)
-            time.sleep(1)
-            time_remaining -= 1
-            save_state(time_remaining)
+            time.sleep(0.1)  # Check every 0.1 seconds
+            time_remaining -= 0.1
+            save_state(max(time_remaining, 0))  # Ensure no negative values
         else:
             GPIO.output(GPIO_PIN, GPIO.LOW)
-            time.sleep(1)
+            time.sleep(1)  # Idle check
+
 
 # Signal handler for graceful termination
 def signal_handler(sig, frame):
@@ -44,11 +48,12 @@ def signal_handler(sig, frame):
     GPIO.cleanup()
     sys.exit(0)
 
+
 if __name__ == "__main__":
     # Register signal handler
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
-    
+
     try:
         # Start the motor control loop
         control_motor()
@@ -58,4 +63,3 @@ if __name__ == "__main__":
         # Ensure the motor is turned off and GPIO is cleaned up
         GPIO.output(GPIO_PIN, GPIO.LOW)
         GPIO.cleanup()
-

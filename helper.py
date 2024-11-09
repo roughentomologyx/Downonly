@@ -123,12 +123,12 @@ def push_motor_from_wei(wei_amount):
     # Convert Wei to Ether
     ether_amount = wei_amount / 1e18
     # Calculate centimeters from Ether (1 ETH = 1 m)
-    centimeters = ether_amount * 100
+
     # Calculate seconds needed for the push (63 seconds per cm)
-    push_seconds = round(centimeters * 63)
+    push_seconds = ether_amount * 63
 
     # Execute the motor push
-    motorPush(push_seconds)
+    #motorPush(push_seconds)
 
     return push_seconds
 
