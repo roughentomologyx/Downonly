@@ -204,6 +204,7 @@ def mint(tokenURI, to_address, contract_address, owner_private_key, owner_addres
 
         signed_tx = web3.eth.account.sign_transaction(tx, private_key=owner_private_key)
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
+        print(str(tx_hash))
         tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
         #opensea here
         dbFunctions.update_column("openSea", "https://testnets.opensea.io/assets/sepolia/" + str(tx_hash), mintID)
@@ -211,7 +212,7 @@ def mint(tokenURI, to_address, contract_address, owner_private_key, owner_addres
         return tx_receipt
     except Exception as e:
         logging.error("Failed to mint NFT: %s", e, exc_info=True)
-        raise
+        raise Exception (e)
 
 
 def load_state_nomintpush():
