@@ -128,7 +128,7 @@ def push_motor_from_wei(wei_amount):
     push_seconds = ether_amount * 63
 
     # Execute the motor push
-    #motorPush(push_seconds)
+    motorPush(push_seconds)
 
     return push_seconds
 
