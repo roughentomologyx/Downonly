@@ -207,7 +207,9 @@ def mint(tokenURI, to_address, contract_address, owner_private_key, owner_addres
         print(str(tx_hash))
         tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
         #opensea here
-        dbFunctions.update_column("openSea", "https://testnets.opensea.io/assets/sepolia/" + str(tx_hash), mintID)
+        open_sea_url = f"https://testnets.opensea.io/assets/sepolia/{contract_address}/{mintID}"
+
+        dbFunctions.update_column("openSea", open_sea_url, mintID)
         logging.info("Transaction successful with hash: %s", web3.to_hex(tx_hash))
         return tx_receipt
     except Exception as e:
