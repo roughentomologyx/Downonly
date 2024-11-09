@@ -140,7 +140,7 @@ def motorPush(seconds):
     try:
     # Read the current value from the file
         with open("./motorTimeRemaining.txt", 'r') as file:
-            current_value = int(file.read().strip())
+            current_value = float(file.read().strip())
             print(current_value)
     # Add x seconds to the current value
         updated_value = current_value + int(seconds)
@@ -152,9 +152,10 @@ def motorPush(seconds):
     except FileNotFoundError:
         print(f"Error: The file motorstatefile' does not exist.")
     except ValueError:
-        print("Error: The file does not contain a valid integer.")
+        print("Error: The file does not contain a valid float.")
     except Exception as e:
         print(f"An error occurred: {e}")
+
 
 
 
