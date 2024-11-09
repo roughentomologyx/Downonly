@@ -9,7 +9,7 @@ from helper import *
 import shutil
 
 # Setting up the logging configuration
-logging.basicConfig(filename='enhanced_app.log', level=logging.DEBUG,  # Changed to DEBUG to capture more details
+logging.basicConfig(filename='app.log', level=logging.DEBUG,  # Changed to DEBUG to capture more details
                     format='%(asctime)s:%(levelname)s:%(message)s')
 
 CONTRACT_PATH = './contracts/dutchAuction.json'
