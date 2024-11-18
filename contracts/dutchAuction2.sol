@@ -26,7 +26,6 @@ contract DutchAuction {
     string[] public surfaces =  ["antenna", "livingRoom", "windPark", "court", "castle", "ferris", "scaffolding", "cruise", "snowPark", "victoryColumn", "escalator"];
 
     mapping(string => uint8) public assetUsageCount;
-    uint256 public lastPaidPrice;
 
     event AuctionSale(
         address buyer,
@@ -59,6 +58,7 @@ contract DutchAuction {
         }
         _;
     }
+
 
     modifier auctionNotEnded() {
         require(auctionCycleActive, "Auction cycle is not active");
@@ -101,6 +101,7 @@ contract DutchAuction {
         cooldown = _cooldown;
         initialPause = _initialPause;
         startTime = block.timestamp;
+
     }
 
     function currentPrice() public view auctionCycleIsActive notOnCooldown notEmergencyPaused returns (uint256) {
@@ -122,11 +123,13 @@ contract DutchAuction {
         require(!ended, "Auction has ended");
         auctionCycleActive = true;
         startTime = block.timestamp + initialPause;  // Use initialPause variable
+
     }
     //irreversible ending of auctions
     function _endAuction() internal {
         auctionCycleActive = false;
         ended = true;
+
     }
 
     function endAuction() external onlyOwnerOrTreasury auctionCycleIsActive {
@@ -154,7 +157,6 @@ contract DutchAuction {
         require(msg.value >= price, "Bid amount is lower than the current price");
         uint256 motorPushesCost = getMotorPushesWithoutBuy() * 1.1 ether;
         totalETHSpent += price + motorPushesCost;
-        lastPaidPrice = price;
         assetUsageCount[character]++;
         assetUsageCount[obstacle]++;
         assetUsageCount[surface]++;
@@ -177,17 +179,6 @@ contract DutchAuction {
         }
     }
 
-    function getToPush() public view returns (uint256) {
-        if (onCooldown()) {
-            if (block.timestamp < startTime) {
-                return lastPaidPrice;
-            }
-            return startingPrice;
-        } else {
-            return currentPrice();
-        }
-    }
-
     function emergencyPause() external onlyOwnerOrTreasury auctionCycleIsActive {
         if (emergencyPaused) {
             // Resuming from emergency pause
@@ -198,6 +189,8 @@ contract DutchAuction {
 
             // Adjust the timers to resume from the point where they left off
             startTime += epauseDuration;
+
+
         } else {
             // start  emergencyPause
             emergencyPaused = true;
@@ -233,6 +226,8 @@ contract DutchAuction {
         return elapsed >= cycleDuration;
     }
 
+
+
     //frontend queries state
     function getPhase() public view returns (string memory) {
         if (emergencyPaused) {
@@ -266,11 +261,11 @@ contract DutchAuction {
         return timesTriggered;
     }
 
-    function  motorPushedByCM () public view notEmergencyPaused returns (uint256) {
+    function  motorPushedByCM () public view returns (uint256) {
         uint256 motorPushesCost = getMotorPushesWithoutBuy() * 1.1 ether;
         return totalETHSpent + motorPushesCost;
-    }
 
+    }
     function getAllAssetsRemainingLives()
         public
         view
@@ -313,13 +308,13 @@ contract DutchAuction {
         );
     }
 
-    function remainingTimeUntilPriceReset() public view auctionCycleIsActive notOnCooldown notEmergencyPaused returns (uint256) {
+    function remainingTimeUntilCooldown() public view auctionCycleIsActive notOnCooldown notEmergencyPaused returns (uint256) {
         uint256 cycleDuration = decreasingDuration + secondsAtBottom;
 
         uint256 elapsed = (block.timestamp - startTime) % (cycleDuration + cooldown);
         return cycleDuration - elapsed;
     }
-    function remainingTimeTillPauseEnds() public view notEmergencyPaused returns (uint256) {
+    function remainingTimeTillPauseEnds() public view returns (uint256) {
         require(onCooldown(), "Auction is not on cooldown");
         if (startTime > block.timestamp) {
             return startTime - block.timestamp;
@@ -330,11 +325,6 @@ contract DutchAuction {
         uint256 timeRemaining = (cycleDuration + cooldown) - elapsed;
         return timeRemaining;
         }
-    }
-        function isAuctionOverTheCliff() public view notEmergencyPaused returns (bool) {
-        if (totalBuys >= MAX_BUYS || totalETHSpent + (getMotorPushesWithoutBuy() * 1.1 ether) >= MAX_ETH) {
-            return true; // The auction has reached its limit
-        }
-        return false; // The auction is still active
-    }
+
+    }//1100000000000000000
 }

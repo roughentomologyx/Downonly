@@ -123,10 +123,12 @@ def push_motor_from_wei(wei_amount):
     # Convert Wei to Ether
     ether_amount = wei_amount / 1e18
     # Calculate centimeters from Ether (1 ETH = 1 m)
-
+    print("calc centimeters")
+    print(wei_amount)
+    print(ether_amount)
     # Calculate seconds needed for the push (63 seconds per cm)
-    push_seconds = ether_amount * 63
-
+    push_seconds = ether_amount * 63.16
+    print(push_seconds)
     # Execute the motor push
     motorPush(push_seconds)
 
@@ -155,10 +157,6 @@ def motorPush(seconds):
         print("Error: The file does not contain a valid float.")
     except Exception as e:
         print(f"An error occurred: {e}")
-
-
-
-
 
 
 def sftp_backup_file(source_file, backup_host, backup_username, backup_password, backup_folder):

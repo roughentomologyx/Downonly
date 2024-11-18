@@ -30,6 +30,11 @@
 				"internalType": "uint256",
 				"name": "_initialPause",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_treasury",
+				"type": "address"
 			}
 		],
 		"stateMutability": "nonpayable",
@@ -83,6 +88,32 @@
 		],
 		"name": "AuctionSale",
 		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "MAX_BUYS",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "MAX_ETH",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
 	},
 	{
 		"inputs": [
@@ -199,19 +230,6 @@
 	},
 	{
 		"inputs": [],
-		"name": "elapsed",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "emergencyPause",
 		"outputs": [],
 		"stateMutability": "nonpayable",
@@ -232,7 +250,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "endAuctionCycle",
+		"name": "endAuction",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -329,45 +347,6 @@
 	},
 	{
 		"inputs": [],
-		"name": "getRemainingLivesForAllCharacters",
-		"outputs": [
-			{
-				"internalType": "uint8[]",
-				"name": "",
-				"type": "uint8[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getRemainingLivesForAllObstacles",
-		"outputs": [
-			{
-				"internalType": "uint8[]",
-				"name": "",
-				"type": "uint8[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getRemainingLivesForAllSurfaces",
-		"outputs": [
-			{
-				"internalType": "uint8[]",
-				"name": "",
-				"type": "uint8[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "initialPause",
 		"outputs": [
 			{
@@ -394,7 +373,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "nextAuctionTime",
+		"name": "motorPushedByCM",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -478,7 +457,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "remainingTimeUntilPriceReset",
+		"name": "remainingTimeUntilCooldown",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -556,12 +535,38 @@
 	},
 	{
 		"inputs": [],
-		"name": "timeInCycle",
+		"name": "totalBuys",
 		"outputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalETHSpent",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "treasury",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",

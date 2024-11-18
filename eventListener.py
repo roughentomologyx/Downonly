@@ -53,7 +53,7 @@ def mintNFT(firstUnsuccess):
         dbFunctions.update_column('jobState', 'done', firstUnsuccess['id'])
         print("mintprice:")
         print(firstUnsuccess['mintprice'])
-        push_motor_from_wei(firstUnsuccess['mintprice'])
+        #push_motor_from_wei(firstUnsuccess['mintprice'])
         #lastSuccess['blockHeight']
     except Exception as e:
         logging.error("An error occurred in mintNFT: %s", e, exc_info=True)
@@ -131,7 +131,7 @@ def main():
             last_unsuc_bc0 = blockchainFunctions.getLastUnsuccessfulBCObject(web3, contract_abi, CONTRACT_ADDRESS, lastSuccess['blockHeight'])
             logging.debug("Last unsuccessful blockchain object: %s", last_unsuc_bc0)
 
-            blockchainFunctions.check4NoMintPush(web3, CONTRACT_ADDRESS, contract_abi)
+
             if last_unsuc_bc0:
                 last_unsuc_bc = json.loads(last_unsuc_bc0)
                 print("1:last_unsuc_bc0")
