@@ -78,7 +78,7 @@ def getFilesFromRenderer(firstUnsuccess):
     logging.debug("getFilesFromRenderer called with: %s", firstUnsuccess)
     if sendRequest2Renderer(firstUnsuccess['surface'], firstUnsuccess['obstacle'], firstUnsuccess['figure'], firstUnsuccess['id'], firstUnsuccess['fullname']):
         logging.info("Files successfully retrieved from renderer")
-        time.sleep(3)
+
         dbFunctions.update_column('jobState', 'rendered', firstUnsuccess['id'])
 
         fullname = str(firstUnsuccess["id"]) + '_' + firstUnsuccess["figure"] + '_' + firstUnsuccess["surface"] + '_' + firstUnsuccess["obstacle"]
@@ -162,7 +162,7 @@ def main():
                 try:
                     logging.info("No unsuccessful transactions found, checking last block:")
                     logging.debug("Block height: %s", lastSuccess['blockHeight'])
-                    time.sleep(5)  # Sleep for 5 seconds before retrying
+
 
 
                 except Exception as e:

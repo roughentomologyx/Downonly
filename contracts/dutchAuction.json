@@ -347,7 +347,46 @@
 	},
 	{
 		"inputs": [],
+		"name": "getToPush",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "initialPause",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isAuctionOverTheCliff",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "lastPaidPrice",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -457,7 +496,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "remainingTimeUntilCooldown",
+		"name": "remainingTimeUntilPriceReset",
 		"outputs": [
 			{
 				"internalType": "uint256",

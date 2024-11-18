@@ -1,4 +1,4 @@
-CREATE TABLE `mints21` (
+CREATE TABLE `mints35` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `jobState` VARCHAR(255) DEFAULT NULL,
   `surface` VARCHAR(255) DEFAULT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE `mints21` (
   `figure` VARCHAR(255) DEFAULT NULL,
   `openSea` VARCHAR(255) DEFAULT NULL,
   `ipfsGIF` VARCHAR(255) DEFAULT NULL,
-  `ipfsJPG` VARCHAR(255) DEFAULT NULL,
+  `ipfsJPEG` VARCHAR(255) DEFAULT NULL,
   `ipfsMP4` VARCHAR(255) DEFAULT NULL,
   `ipfsMP3` VARCHAR(255) DEFAULT NULL,
   `ipfsGLB` VARCHAR(255) DEFAULT NULL,
@@ -21,5 +21,5 @@ CREATE TABLE `mints21` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-GRANT SELECT ON downonly.mints21 TO 'frontend'@'%';
-GRANT SELECT, UPDATE, INSERT ON downonly.mints21 TO 'renderer'@'%';
+GRANT SELECT ON downonly.mints35 TO 'frontend'@'%';
+GRANT SELECT, UPDATE, INSERT ON downonly.mints35 TO 'renderer'@'%';

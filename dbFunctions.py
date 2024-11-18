@@ -205,7 +205,7 @@ def getLastSuccess(retry_attempts=3):
             print("Connection to database failed.")
             if attempt < retry_attempts - 1:
                 print("Retrying in 10 seconds...")
-                time.sleep(10)
+
                 continue
             else:
                 raise Exception("Failed to connect to database after several attempts.")
@@ -230,7 +230,7 @@ def getLastSuccess(retry_attempts=3):
                 print(f"An error occurred: {err}")
                 if attempt < retry_attempts - 1:
                     print("Retrying in 10 seconds...")
-                    time.sleep(10)
+                    time.sleep(5)
                     continue
                 else:
                     raise
