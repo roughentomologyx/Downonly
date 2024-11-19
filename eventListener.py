@@ -13,7 +13,7 @@ import logging, time
 from blockchainFunctions import pinContentToIPFS
 
 load_dotenv()
-from helper import send_alert_email, sftp_backup_file, sendRequest2Renderer, getFallHeight, transform_ipfs_link,
+from helper import send_alert_email, sftp_backup_file, sendRequest2Renderer, getFallHeight, transform_ipfs_link
 
 initialBlockHeight = 6311981
 logging.basicConfig(filename='app.log', level=logging.DEBUG,  # Changed to DEBUG to capture more details
