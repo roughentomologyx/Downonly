@@ -15,8 +15,6 @@ logging.basicConfig(filename='app.log', level=logging.DEBUG,  # Changed to DEBUG
 CONTRACT_PATH = './contracts/dutchAuction.json'
 INFURA_URL = os.getenv('INFURA_URL')
 CONTRACT_ADDRESS = os.getenv('CONTRACT_ADDRESS')
-STATE_FILE = 'motorNoMintPushCount.txt'
-PUSH_COUNT_FILE = 'pushMotorOnNoMintAll.txt'
 distance = os.getenv('NOMINT_DISTANCE')
 dbhost = os.getenv('DBHOST')
 backup_user = os.getenv('BACKUP_USER')
@@ -88,7 +86,7 @@ def create_ipfsjson(name, character, obstacle, surface, picIPFS, vidIPFS, glbIPF
         picbaseIPFS = convert_ipfs_url(picIPFS)
         vidbaseIPFS = convert_ipfs_url(vidIPFS)
         dictionary = {
-            "description": f"3D-Modell: [{glbIPFS}]({glbIPFS})",
+            "description": f"3D-Modell: [{glbIPFS}]({glbIPFS}) \n Website: [https://downonly.xyz](https://downonly.xyz)",
             "external_url": "https://nikitadiakur.com/",
             "image": picbaseIPFS,
             "animation_url": vidbaseIPFS,
@@ -136,7 +134,7 @@ def pinContentToIPFS(firstUnsuccess: Dict[str, Any], pinata_api_key: str, pinata
 
                 ipfs_hash = response_data.get('IpfsHash')
                 if ipfs_hash:
-                    ipfs_link = f"https://ipfs.io/ipfs/{ipfs_hash}"
+                    ipfs_link = f"https://aqua-few-camel-178.mypinata.cloud/ipfs/{ipfs_hash}"
                     dbFunctions.update_column(f'ipfs{ext.upper()}', ipfs_link, firstUnsuccess['id'])
                 else:
                     logging.error("IPFS hash not found in the response for file: %s", file_path)
@@ -202,76 +200,46 @@ def mint(tokenURI, to_address, contract_address, owner_private_key, owner_addres
             'gasPrice': web3.to_wei('20', 'gwei')
         })
 
+        # Calculate the estimated gas cost
+        estimated_gas_cost = tx['gas'] * tx['gasPrice']
+        estimated_gas_cost_eth = web3.from_wei(estimated_gas_cost, 'ether')
+
+        # Define the threshold limit for the transaction cost (in ETH)
+        max_allowed_gas_cost = 0.007  # in ETH
+        print(estimated_gas_cost_eth)
+        # Raise an exception if the estimated cost exceeds the limit
+        if estimated_gas_cost_eth > max_allowed_gas_cost:
+            raise Exception(
+                f"Estimated transaction cost ({estimated_gas_cost_eth} ETH) exceeds the limit of {max_allowed_gas_cost} ETH.")
+
+        # Sign and send the transaction
         signed_tx = web3.eth.account.sign_transaction(tx, private_key=owner_private_key)
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         print(str(tx_hash))
         tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
-        #opensea here
+        if tx_receipt.status == 1:
+            print("Transaction succeeded.")
+            logging.info("Transaction succeeded with hash: %s", web3.to_hex(tx_hash))
+        else:
+            logging.warning("Transaction failed with hash: %s", web3.to_hex(tx_hash))
+            raise Exception("Minting Transaction failed.")
+        # Update OpenSea link here
         open_sea_url = f"https://testnets.opensea.io/assets/sepolia/{contract_address}/{mintID}"
-
         dbFunctions.update_column("openSea", open_sea_url, mintID)
+
         logging.info("Transaction successful with hash: %s", web3.to_hex(tx_hash))
         return tx_receipt
     except Exception as e:
         logging.error("Failed to mint NFT: %s", e, exc_info=True)
-        raise Exception (e)
+        raise Exception(e)
 
 
-def load_state_nomintpush():
-    logging.debug("Loading state from file: %s", STATE_FILE)
-    if not os.path.exists(STATE_FILE):
-        with open(STATE_FILE, 'w') as f:
-            f.write('0')
-        return 0
-    else:
-        with open(STATE_FILE, 'r') as f:
-            state = int(f.read().strip())
-            logging.info("Loaded state: %d", state)
-            return state
 
 
-def save_state_nomintpush(value):
-    logging.debug("Saving state to file: %s", STATE_FILE)
-    with open(STATE_FILE, 'w') as f:
-        f.write(str(value))
-    logging.info("State saved successfully: %d", value)
 
 
-def increment_push_count():
-    logging.debug("Incrementing push count in file: %s", PUSH_COUNT_FILE)
-    if not os.path.exists(PUSH_COUNT_FILE):
-        with open(PUSH_COUNT_FILE, 'w') as f:
-            f.write('0')
-    with open(PUSH_COUNT_FILE, 'r') as f:
-        count = float(f.read().strip())
-    with open(PUSH_COUNT_FILE, 'w') as f:
-        f.write(str(count + 1))
-    logging.info("Push count incremented, new value: %d", count + 1)
 
 
-def pushMotorOnNoMint():
-    logging.debug("Pushing motor with distance: %s", distance)
-    motorPush(distance)
-    increment_push_count()
-    logging.info("Motor push completed")
 
 
-def check4NoMintPush(web3, contract_address, contract_abi):
-    logging.debug("Checking for NoMintPush")
-    try:
-        contract = web3.eth.contract(address=contract_address, abi=contract_abi)
-        current_state = load_state_nomintpush()
-        motor_push_count = contract.functions.getMotorPushesWithoutBuy().call()
-        logging.debug("Motor push count from blockchain: %d, current state: %d", motor_push_count, current_state)
 
-        if motor_push_count == current_state:
-            logging.info("No change in motor push count, doing nothing.")
-        elif motor_push_count > current_state:
-            for i in range(current_state, motor_push_count):
-                pushMotorOnNoMint()
-            save_state_nomintpush(motor_push_count)
-        elif motor_push_count < current_state:
-            save_state_nomintpush(0)
-    except Exception as e:
-        logging.error("An error occurred in check4NoMintPush: %s", e, exc_info=True)
-        send_alert_email(f"check4NoMintPush failed: {str(e)}")

@@ -13,7 +13,7 @@ import logging, time
 from blockchainFunctions import pinContentToIPFS
 
 load_dotenv()
-from helper import send_alert_email, motorPush, sftp_backup_file, sendRequest2Renderer, getFallHeight, transform_ipfs_link, push_motor_from_wei
+from helper import send_alert_email, sftp_backup_file, sendRequest2Renderer, getFallHeight, transform_ipfs_link,
 
 initialBlockHeight = 6311981
 logging.basicConfig(filename='app.log', level=logging.DEBUG,  # Changed to DEBUG to capture more details
@@ -39,9 +39,6 @@ else:
 def mintNFT(firstUnsuccess):
     # rotate Motor
     try:
-        if dbFunctions.nextinc() != firstUnsuccess['obstacle']:
-            print("break here")
-            #raise Exception ("cannot mint, as mintid does not match")
         logging.debug("mintNFT called with: %s", firstUnsuccess)
         contract_address = os.getenv("NFTCONTRACT_ADDRESS")
         owner_private_key = os.getenv("PRIVATE_KEY")
@@ -51,10 +48,7 @@ def mintNFT(firstUnsuccess):
         backupfile = "./zips/" + firstUnsuccess['fullname'] + ".zip"
         #sftp_backup_file(backupfile, dbhost, backup_user, backup_pass, ".files")
         dbFunctions.update_column('jobState', 'done', firstUnsuccess['id'])
-        print("mintprice:")
-        print(firstUnsuccess['mintprice'])
-        #push_motor_from_wei(firstUnsuccess['mintprice'])
-        #lastSuccess['blockHeight']
+
     except Exception as e:
         logging.error("An error occurred in mintNFT: %s", e, exc_info=True)
         raise Exception(e)
@@ -82,9 +76,7 @@ def getFilesFromRenderer(firstUnsuccess):
         dbFunctions.update_column('jobState', 'rendered', firstUnsuccess['id'])
 
         fullname = str(firstUnsuccess["id"]) + '_' + firstUnsuccess["figure"] + '_' + firstUnsuccess["surface"] + '_' + firstUnsuccess["obstacle"]
-        print("fallhight")
         fallHeight = getFallHeight(fullname)
-        print("fallhight")
         print(fallHeight)
         dbFunctions.update_column('fullname', fullname, firstUnsuccess['id'])
         dbFunctions.update_column('fallDistance', fallHeight, firstUnsuccess['id'])
@@ -147,7 +139,7 @@ def main():
                     "paid",
                     last_unsuc_bc["args"]["surface"], last_unsuc_bc["args"]["obstacle"],
                     last_unsuc_bc["args"]["character"],
-                    last_unsuc_bc["args"]["amount"], last_unsuc_bc["args"]["buyer"], last_unsuc_bc["transactionHash"],
+                    last_unsuc_bc["args"]["price"], last_unsuc_bc["args"]["buyer"], last_unsuc_bc["transactionHash"],
                     lastSuccess['blockHeight'], last_unsuc_bc["args"]["mintID"], fullname
                 )
             else:

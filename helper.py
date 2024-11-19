@@ -21,8 +21,6 @@ load_dotenv()
 CONTRACT_PATH = './contracts/dutchAuction.json'
 INFURA_URL = os.getenv('INFURA_URL')
 CONTRACT_ADDRESS = os.getenv('CONTRACT_ADDRESS')
-STATE_FILE = 'motorNoMintPushCount.txt'
-PUSH_COUNT_FILE = 'pushMotorOnNoMintAll.txt'
 distance = os.getenv('NOMINT_DISTANCE')
 dbhost=os.getenv('DBHOST')
 backup_user=os.getenv('BACKUP_USER')
@@ -202,15 +200,15 @@ def getFallHeight(name):
         with open(file_path, 'r') as file:
             data = json.load(file)
         print("here")
-        y_coordinate = str(data.get("startXYZ", {}).get("y"))
+        y_coordinate = str(data.get("endXYZ", {}).get("y"))
         return y_coordinate
     except Exception as e:
         raise Exception
 
 
 def transform_ipfs_link(url):
-    if url.startswith("https://ipfs.io/ipfs/"):
-        return url.replace("https://ipfs.io/ipfs/", "ipfs://")
+    if url.startswith("https://aqua-few-camel-178.mypinata.cloud/ipfs/"):
+        return url.replace("https://aqua-few-camel-178.mypinata.cloud/ipfs/", "ipfs://")
     else:
         return "Invalid IPFS link format"
 #print(getFallHeight("../testdata/JsonTest3"))
