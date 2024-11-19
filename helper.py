@@ -210,5 +210,5 @@ def transform_ipfs_link(url):
     if url.startswith("https://aqua-few-camel-178.mypinata.cloud/ipfs/"):
         return url.replace("https://aqua-few-camel-178.mypinata.cloud/ipfs/", "ipfs://")
     else:
-        return "Invalid IPFS link format"
+        raise Exception("Invalid IPFS link format")
 #print(getFallHeight("../testdata/JsonTest3"))
