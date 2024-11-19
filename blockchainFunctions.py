@@ -87,7 +87,7 @@ def create_ipfsjson(name, character, obstacle, surface, picIPFS, vidIPFS, glbIPF
         picbaseIPFS = convert_ipfs_url(picIPFS)
         vidbaseIPFS = convert_ipfs_url(vidIPFS)
         dictionary = {
-            "description": f"3D-Modell: [{glbIPFS}]({glbIPFS}) \\n Website: [https://downonly.xyz](https://downonly.xyz)",
+            "description": f"3D-Modell: [{glbIPFS}]({glbIPFS}) Website: [https://downonly.xyz](https://downonly.xyz)",
             "external_url": "https://nikitadiakur.com/",
             "image": picbaseIPFS,
             "animation_url": vidbaseIPFS,
@@ -106,7 +106,7 @@ def create_ipfsjson(name, character, obstacle, surface, picIPFS, vidIPFS, glbIPF
         return json_file_path
     except Exception as e:
         logging.error("Failed to create IPFS JSON for %s: %s", name, e, exc_info=True)
-        raise
+        raise Exception
 
 
 def pinContentToIPFS(firstUnsuccess: Dict[str, Any], pinata_api_key: str, pinata_secret: str) -> Dict[str, Any]:
@@ -170,7 +170,7 @@ def uploadJsonToIPFS(firstUnsuccess: Dict[str, Any], pinata_api_key: str, pinata
 
             ipfs_hash = response_data.get('IpfsHash')
             if ipfs_hash:
-                ipfs_link = f"https://ipfs.io/ipfs/{ipfs_hash}"
+                ipfs_link = f"https://aqua-few-camel-178.mypinata.cloud/ipfs/{ipfs_hash}"
                 dbFunctions.update_column('ipfsJSON', ipfs_link, firstUnsuccess['id'])
             else:
                 logging.error("IPFS hash not found in the response for JSON file: %s", json_file_path)
