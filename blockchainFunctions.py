@@ -86,7 +86,7 @@ def create_ipfsjson(name, character, obstacle, surface, picIPFS, vidIPFS, glbIPF
         picbaseIPFS = convert_ipfs_url(picIPFS)
         vidbaseIPFS = convert_ipfs_url(vidIPFS)
         dictionary = {
-            "description": f"3D-Modell: [{glbIPFS}]({glbIPFS}) \n Website: [https://downonly.xyz](https://downonly.xyz)",
+            "description": f"3D-Modell: [{glbIPFS}]({glbIPFS}) \\n Website: [https://downonly.xyz](https://downonly.xyz)",
             "external_url": "https://nikitadiakur.com/",
             "image": picbaseIPFS,
             "animation_url": vidbaseIPFS,
