@@ -74,6 +74,7 @@ def convert_ipfs_url(url):
     if url.startswith("https://aqua-few-camel-178.mypinata.cloud/ipfs/"):
         converted_url = "ipfs://" + url.split("/")[-1]
         logging.info("Converted IPFS URL: %s", converted_url)
+        print(converted_url)
         return converted_url
     else:
         logging.error("URL does not match the expected IPFS format: %s", url)
@@ -191,7 +192,7 @@ def mint(tokenURI, to_address, contract_address, owner_private_key, owner_addres
 
         with open('./contracts/NFT.json', 'r') as abi_file:
             contract_abi_nft = json.load(abi_file)
-
+        print(tokenURI)
         contract_nft = web3.eth.contract(address=contract_address, abi=contract_abi_nft)
         tx = contract_nft.functions.mintNFT(to_address, tokenURI).build_transaction({
             'from': owner_address,
